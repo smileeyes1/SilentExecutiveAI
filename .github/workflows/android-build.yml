@@ -1,3 +1,5 @@
+
+
 name: Build Android APK
 
 on:
@@ -10,37 +12,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ١) جلب الكود
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ٢) إعداد Java
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
 
-      # ٣) تثبيت Android SDK
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      # ٤) قبول تراخيص Android SDK (الخطوة الحاسمة)
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses
 
-      # ٥) إعداد Gradle
-      - name: Set up Gradle
-        uses: gradle/gradle-build-action@v3
+      # ✅ الخطوة الحاسمة: توليد Gradle Wrapper رسمي
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper --gradle-version 8.4
 
-      # ٦) بناء APK
+      # ✅ الآن نستخدم wrapper (Android يدعمه فقط)
       - name: Build Debug APK
-        run: gradle assembleDebug
+        run: ./gradlew assembleDebug
 
-      # ٧) رفع APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
-          path: app/build
-
+          path: app/build/outputs/apk/debug/*.apk
