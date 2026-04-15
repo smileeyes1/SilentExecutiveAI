@@ -15,22 +15,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ٢) إعداد Java (إلزامي للأندرويد)
+      # ٢) إعداد Java
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
 
-      # ٣) إعداد Gradle بدون Wrapper
+      # ٣) تثبيت Android SDK (الخطوة الحاسمة)
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # ٤) إعداد Gradle
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v3
 
-      # ٤) بناء APK (Debug)
+      # ٥) بناء APK
       - name: Build Debug APK
         run: gradle assembleDebug
 
-      # ٥) رفع APK كملف قابل للتحميل
+      # ٦) رفع APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
