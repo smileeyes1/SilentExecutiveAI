@@ -1,4 +1,3 @@
-
 name: Build Android APK
 
 on:
@@ -22,21 +21,26 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
-      # ٣) تثبيت Android SDK (الخطوة الحاسمة)
+      # ٣) تثبيت Android SDK
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      # ٤) إعداد Gradle
+      # ٤) قبول تراخيص Android SDK (الخطوة الحاسمة)
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses
+
+      # ٥) إعداد Gradle
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v3
 
-      # ٥) بناء APK
+      # ٦) بناء APK
       - name: Build Debug APK
         run: gradle assembleDebug
 
-      # ٦) رفع APK
+      # ٧) رفع APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: app/build
+
